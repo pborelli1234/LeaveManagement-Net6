@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LeaveManagement.Web.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230923133723_AddedLeaveTables")]
-    partial class AddedLeaveTables
+    [Migration("20231221151526_AddLeaveTables")]
+    partial class AddLeaveTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -124,7 +124,7 @@ namespace LeaveManagement.Web.Data.Migrations
                     b.Property<int>("LeaveTypeId")
                         .HasColumnType("int");
 
-                    b.Property<int>("NumberOfDay")
+                    b.Property<int>("NumberOfDays")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

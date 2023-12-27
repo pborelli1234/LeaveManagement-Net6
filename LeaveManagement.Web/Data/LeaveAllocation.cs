@@ -3,9 +3,9 @@ using System.Security.Principal;
 
 namespace LeaveManagement.Web.Data
 {
-    public class LeaveAllocation : BaseEntity
+    public class LeaveAllocation //: BaseEntity
     {
-        //public int Id { get; set; }
+        public int Id { get; set; }
           
         [ForeignKey("LeaveTypeId")]
         public LeaveType LeaveType { get; set; }
@@ -13,9 +13,9 @@ namespace LeaveManagement.Web.Data
 
         public int EmployeeId { get; set; }
 
-        public int NumberOfDay { get; set; }
-        //public DateTime DateCreated { get; set; }
-        //public DateTime DateModified { get; set; }
+        public int NumberOfDays { get; set; }
+        public DateTime DateCreated { get; set; }
+        public DateTime DateModified { get; set; }
 
     }
 }
