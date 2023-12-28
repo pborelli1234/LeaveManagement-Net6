@@ -7,7 +7,7 @@
 <h1>Index</h1>
 
 <p style="width:100%;text-align:right;padding-right:10px">
-    <button class="btn-sm btn-success" asp-action="Create"><i class="fa-solid fa-plus"></i> Create New</button>
+    <a class="btn-sm btn-success" asp-action="Create" ><i class="fa-solid fa-plus"></i> Create New</a>
 </p>
 <table class="table">
     <thead>
@@ -37,9 +37,9 @@
                 @Html.DisplayFor(modelItem => item.DateCreated)
             </td>
             <td style="text-align:right">
-                <button class="btn-sm btn-warning" asp-action="Edit" asp-route-id="@item.Id" title="Edit"><i class="fa-solid fa-edit"></i></button>
-                <button class="btn-sm btn-info" asp-action="Details" asp-route-id="@item.Id" title="Details"><i class="fa-solid fa-circle-info"></i></button>
-                <button data-id="@item.Id" class="btn-sm btn-danger deleteBtn" asp-route-id="@item.Id" type="button" title="Delete"><i class="fa-solid fa-trash-can"></i></button>
+                <a class="btn-sm btn-warning" asp-action="Edit" asp-route-id="@item.Id" title="Edit"><i class="fa-solid fa-edit"></i></a>
+                <a class="btn-sm btn-info" asp-action="Details" asp-route-id="@item.Id" title="Details"><i class="fa-solid fa-circle-info"></i></a>
+                <a data-id="@item.Id" class="btn-sm btn-danger deleteBtn" asp-route-id="@item.Id" type="button" title="Delete"><i class="fa-solid fa-trash-can"></i></a>
             </td>
         </tr>
 }
