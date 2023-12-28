@@ -1,4 +1,6 @@
-﻿using LeaveManagement.Web.Data;
+﻿using AutoMapper;
+using LeaveManagement.Web.Data;
+using LeaveManagement.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,16 +9,25 @@ namespace LeaveManagement.Web.Controllers
     public class LeaveTypesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public LeaveTypesController(ApplicationDbContext context)
+        public LeaveTypesController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _context.Dispose();
         }
 
         // GET: LeaveTypes
         public async Task<IActionResult> Index()
         {
-            List<LeaveType> leaveTypes = await _context.LeaveTypes.ToListAsync();
+            //List<LeaveType> leaveTypes = await _context.LeaveTypes.ToListAsync();
+
+            var leaveTypes = _mapper.Map<List<LeaveTypeViewModel>>(await _context.LeaveTypes.ToListAsync());
 
             return View(leaveTypes);
         }
@@ -30,13 +41,14 @@ namespace LeaveManagement.Web.Controllers
             }
 
             LeaveType? leaveType = await _context.LeaveTypes.FirstOrDefaultAsync(m => m.Id == id);
+            LeaveTypeViewModel leaveTypeVM = _mapper.Map<LeaveTypeViewModel>(leaveType);
 
             if (leaveType == null)
             {
                 return NotFound();
             }
 
-            return View(leaveType);
+            return View(leaveTypeVM);
         }
 
         // GET: LeaveTypes/Create
@@ -49,17 +61,24 @@ namespace LeaveManagement.Web.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,DefaultDays,Id,DateCreated,DateModified")] LeaveType leaveType)
+        public async Task<IActionResult> Create(LeaveTypeViewModel leaveTypeVM)
         {
             if (ModelState.IsValid)
             {
+                //var leaveType = _context.LeaveTypes.FirstOrDefault(m => m.Id == leaveTypeVM.Id);
+
+                var leaveType = _mapper.Map<LeaveType>(leaveTypeVM);
+
+                leaveType.DateCreated = DateTime.Now;
+                leaveType.DateModified = DateTime.Now;
+
                 _context.Add(leaveType);
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(leaveType);
+            return View(leaveTypeVM);
         }
 
         // GET: LeaveTypes/Edit/5
@@ -71,22 +90,23 @@ namespace LeaveManagement.Web.Controllers
             }
 
             var leaveType = await _context.LeaveTypes.FindAsync(id);
+            var leaveTypeVM = _mapper.Map<LeaveTypeViewModel>(leaveType);
 
             if (leaveType == null)
             {
                 return NotFound();
             }
 
-            return View(leaveType);
+            return View(leaveTypeVM);
         }
 
         // POST: LeaveTypes/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,DefaultDays,Id,DateCreated,DateModified")] LeaveType leaveType)
+        public async Task<IActionResult> Edit(int id, LeaveTypeViewModel leaveTypeVM)
         {
-            if (id != leaveType.Id)
+            if (id != leaveTypeVM.Id)
             {
                 return NotFound();
             }
@@ -95,26 +115,30 @@ namespace LeaveManagement.Web.Controllers
             {
                 try
                 {
+                    leaveTypeVM.DateModified = DateTime.Now;
+                    var leaveType = _mapper.Map<LeaveType>(leaveTypeVM);
+
                     _context.Update(leaveType);
 
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!LeaveTypeExists(leaveType.Id))
+                    //DbUpdateConcurrencyException checks that 2 people are not editing the field at the same time
+                    if (!LeaveTypeExists(leaveTypeVM.Id))
                     {
                         return NotFound();
                     }
                     else
                     {
-                        throw;
+                        throw new Exception("Unable to edit record as it is already been edited at the same time.");
                     }
                 }
 
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(leaveType);
+            return View(leaveTypeVM);
         }
 
         // GET: LeaveTypes/Delete/5
