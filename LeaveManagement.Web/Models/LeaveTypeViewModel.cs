@@ -16,9 +16,11 @@ namespace LeaveManagement.Web.Models
         public int DefaultDays { get; set; }
 
         [Display(Name = "Date Created")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
         public DateTime DateCreated { get; set; }
 
         [Display(Name = "Date Modified")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
         public DateTime DateModified { get; set; }
     }
 }

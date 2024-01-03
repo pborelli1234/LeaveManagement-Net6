@@ -1,12 +1,15 @@
 ﻿using AutoMapper;
+using LeaveManagement.Web.Constants;
 using LeaveManagement.Web.Contracts;
 using LeaveManagement.Web.Data;
 using LeaveManagement.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace LeaveManagement.Web.Controllers
 {
+    [Authorize]
     public class LeaveTypesController : Controller
     {
         private readonly ILeaveTypeRepository _leaveTypeRepository;
@@ -47,6 +50,7 @@ namespace LeaveManagement.Web.Controllers
         }
 
         // GET: LeaveTypes/Create
+        [Authorize(Roles = Roles.Administrator)]
         public IActionResult Create()
         {
             return View();
@@ -56,6 +60,7 @@ namespace LeaveManagement.Web.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = Roles.Administrator)]
         public async Task<IActionResult> Create(LeaveTypeViewModel leaveTypeVM)
         {
             if (ModelState.IsValid)
@@ -74,6 +79,7 @@ namespace LeaveManagement.Web.Controllers
         }
 
         // GET: LeaveTypes/Edit/5
+        [Authorize(Roles = Roles.Administrator)]
         public async Task<IActionResult> Edit(int? id)
         {
             var leaveType = await _leaveTypeRepository.GetAsync(id);
@@ -92,6 +98,7 @@ namespace LeaveManagement.Web.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = Roles.Administrator)]
         public async Task<IActionResult> Edit(int id, LeaveTypeViewModel leaveTypeVM)
         {
             if (id != leaveTypeVM.Id)
@@ -130,6 +137,7 @@ namespace LeaveManagement.Web.Controllers
         // POST: LeaveTypes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = Roles.Administrator)]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _leaveTypeRepository.DeleteAsync(id);

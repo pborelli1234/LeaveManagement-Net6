@@ -7,21 +7,21 @@
 <h1>Index</h1>
 
 <p style="width:100%;text-align:right;padding-right:10px">
-    <a class="btn-sm btn-success" asp-action="Create" ><i class="fa-solid fa-plus"></i> Create New</a>
+    <a class="btn-sm btn-success" asp-action="Create" type="button"><i class="fa-solid fa-plus"></i> Create New</a>
 </p>
 <table class="table">
     <thead>
         <tr>
-            <th style="width:35%">
+            <th style="width:45%">
                 @Html.DisplayNameFor(model => model.Name)
             </th>
-            <th style="width:20%">
+            <th style="width:25%">
                 @Html.DisplayNameFor(model => model.DefaultDays)
             </th>
-            <th style="width:25%">
+            <th style="width:15%">
                 @Html.DisplayNameFor(model => model.DateCreated)
             </th>
-            <th style="width:20%"></th>
+            <th style="width:15%"></th>
         </tr>
     </thead>
     <tbody>
@@ -34,7 +34,7 @@
                 @Html.DisplayFor(modelItem => item.DefaultDays)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DateCreated)
+               @Html.DisplayFor(modelItem => item.DateCreated)
             </td>
             <td style="text-align:right">
                 <a class="btn-sm btn-warning" asp-action="Edit" asp-route-id="@item.Id" title="Edit"><i class="fa-solid fa-edit"></i></a>

@@ -53,3 +53,12 @@ h1 {
     font-size: 22px;
     margin-bottom: 20px;
 }
+
+a {
+    text-decoration: none !important;
+}
+
+.form-group {
+    margin-bottom: 2px !important;
+    padding-bottom: 2px !important;
+}
