@@ -9,6 +9,10 @@ namespace LeaveManagement.Web.Configurations
         public MapperConfig()
         {
             CreateMap<LeaveType, LeaveTypeViewModel>().ReverseMap();
+            CreateMap<Employee, EmployeeListVM>().ReverseMap();
+            CreateMap<Employee, EmployeeAllocationVM>().ReverseMap();
+            CreateMap<LeaveAllocation, LeaveAllocationVM>().ReverseMap();
+            CreateMap<LeaveAllocation, LeaveAllocationEditVM>().ReverseMap();
         }
     }
 }

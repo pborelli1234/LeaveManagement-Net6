@@ -12,7 +12,7 @@
 <table class="table">
     <thead>
         <tr>
-            <th style="width:45%">
+            <th style="width:40%">
                 @Html.DisplayNameFor(model => model.Name)
             </th>
             <th style="width:25%">
@@ -21,7 +21,7 @@
             <th style="width:15%">
                 @Html.DisplayNameFor(model => model.DateCreated)
             </th>
-            <th style="width:15%"></th>
+            <th style="width:20%"></th>
         </tr>
     </thead>
     <tbody>
@@ -37,9 +37,11 @@
                @Html.DisplayFor(modelItem => item.DateCreated)
             </td>
             <td style="text-align:right">
+                    @* <button data-id="@item.Id" class="btn-sm btn-primary allocateBtn" type="button"><i class="fa-solid fa-share-from-square"></i></button> *@
+                <a data-id="@item.Id" class="btn-sm btn-primary allocateBtn" title="Allocate Leave"><i class="fa-solid fa-share-from-square"></i></a>
                 <a class="btn-sm btn-warning" asp-action="Edit" asp-route-id="@item.Id" title="Edit"><i class="fa-solid fa-edit"></i></a>
                 <a class="btn-sm btn-info" asp-action="Details" asp-route-id="@item.Id" title="Details"><i class="fa-solid fa-circle-info"></i></a>
-                <a data-id="@item.Id" class="btn-sm btn-danger deleteBtn" asp-route-id="@item.Id" type="button" title="Delete"><i class="fa-solid fa-trash-can"></i></a>
+                <a data-id="@item.Id" class="btn-sm btn-danger deleteBtn" title="Delete"><i class="fa-solid fa-trash-can"></i></a>
             </td>
         </tr>
 }
@@ -47,15 +49,18 @@
 </table>
 
 <form id="frmDelete" asp-action="Delete">
-    <input type="hidden" id="leaveTypeId" name="Id" />
+    <input type="hidden" id="leaveTypeIdDelete" name="Id" />
+</form>
+
+<form id="allocationForm" asp-action="AllocateLeave">
+    <input type="hidden" id="leaveTypeIdAllocate" name="Id" />
 </form>
 
 @section Scripts {
     <script>
         $(function() {
 
-            $('.table').DataTable();
-            //new DataTable('#example');
+            //$('.table').DataTable();
 
             $('.deleteBtn').click(function (e) {
                 swal({
@@ -70,8 +75,28 @@
                         
                         var btn = $(this);
                         var id = btn.data("id");
-                        $('#leaveTypeId').val(id);
+                        $('#leaveTypeIdDelete').val(id);
                         $('#frmDelete').submit();
+                    }
+
+                });
+            });
+
+            $('.allocateBtn').click(function (e) {
+                swal({
+                    title: "Are you sure?",
+                    text: "Are you sure you want to allocate this leave to all employees?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true
+                }).then((confirm) => {
+
+                    if (confirm) {
+
+                        var btn = $(this);
+                        var id = btn.data("id");
+                        $('#leaveTypeIdAllocate').val(id);
+                        $('#allocationForm').submit();
                     }
 
                 });
