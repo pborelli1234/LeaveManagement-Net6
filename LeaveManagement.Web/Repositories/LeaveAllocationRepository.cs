@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using LeaveManagement.Web.Constants;
 using LeaveManagement.Web.Contracts;
 using LeaveManagement.Web.Data;
@@ -15,14 +16,17 @@ namespace LeaveManagement.Web.Repositories
         private readonly UserManager<Employee> _userManager;
         private readonly ILeaveTypeRepository _leaveTypeRepository;
         private readonly IMapper _mapper;
+        private readonly AutoMapper.IConfigurationProvider _configurationProvider;
 
         public LeaveAllocationRepository(ApplicationDbContext context, 
-            UserManager<Employee> userManager, ILeaveTypeRepository leaveTypeRepository, IMapper mapper) : base(context)
+            UserManager<Employee> userManager, ILeaveTypeRepository leaveTypeRepository, 
+            IMapper mapper, AutoMapper.IConfigurationProvider configurationProvider) : base(context)
         {
             _context = context;
             _userManager = userManager;
             _leaveTypeRepository = leaveTypeRepository;
             _mapper = mapper;
+            _configurationProvider = configurationProvider;
         }
 
         public async Task LeaveAllocation(int leaveTypeId)
@@ -67,15 +71,25 @@ namespace LeaveManagement.Web.Repositories
 
         public async Task<EmployeeAllocationVM> GetEmployeeAllocations(string employeeId)
         {
+            //var allocations = await _context.LeaveAllocations
+            //                            .Include(q => q.LeaveType)
+            //                            .Where(q => q.EmployeeId == employeeId)
+            //                            .ToListAsync();
+
+            //Project To gets only the fields in the VM
+
             var allocations = await _context.LeaveAllocations
                                         .Include(q => q.LeaveType)
                                         .Where(q => q.EmployeeId == employeeId)
+                                        .ProjectTo<LeaveAllocationVM>(_configurationProvider)
                                         .ToListAsync();
 
             var employee = await _userManager.FindByIdAsync(employeeId);
 
             EmployeeAllocationVM employeeAllocationVM = _mapper.Map<EmployeeAllocationVM>(employee);
-            employeeAllocationVM.LeaveAllocations = _mapper.Map<List<LeaveAllocationVM>>(allocations);
+            //employeeAllocationVM.LeaveAllocations = _mapper.Map<List<LeaveAllocationVM>>(allocations);
+
+            employeeAllocationVM.LeaveAllocations = allocations;
 
             return employeeAllocationVM;
         }
