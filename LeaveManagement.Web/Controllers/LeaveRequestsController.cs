@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using LeaveManagement.Web.Data;
-using LeaveManagement.Web.Models;
-using LeaveManagement.Web.Contracts;
+using LeaveManagement.Data;
+using LeaveManagement.Common.Models;
+using LeaveManagement.Application.Contracts;
 using Microsoft.AspNetCore.Authorization;
-using LeaveManagement.Web.Constants;
+using LeaveManagement.Common.Constants;
 
 namespace LeaveManagement.Web.Controllers
 {
@@ -14,11 +14,14 @@ namespace LeaveManagement.Web.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ILeaveRequestsRepository _leaveRequestRepository;
+        private readonly ILogger<LeaveRequestsController> _logger;
 
-        public LeaveRequestsController(ApplicationDbContext context, ILeaveRequestsRepository leaveRequestRepository)
+        public LeaveRequestsController(ApplicationDbContext context, ILeaveRequestsRepository leaveRequestRepository,
+              ILogger<LeaveRequestsController> logger)
         {
             _context = context;
             _leaveRequestRepository = leaveRequestRepository;
+            _logger = logger;
         }
 
         // GET: LeaveRequests
@@ -60,6 +63,7 @@ namespace LeaveManagement.Web.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error Approving Leave Request");
                 throw;
             }
 
@@ -76,6 +80,7 @@ namespace LeaveManagement.Web.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error Cancelling Leave Request");
                 ModelState.AddModelError(string.Empty, "An error has occured. Please try again later.");
             }
 
@@ -89,8 +94,6 @@ namespace LeaveManagement.Web.Controllers
             {
                 LeaveTypes = new SelectList(_context.LeaveTypes, "Id", "Name")
             };
-
-            //ViewData["LeaveTypeId"] = new SelectList(_context.LeaveTypes, "Id", "Name");
 
             return View(model);
         }
@@ -116,6 +119,7 @@ namespace LeaveManagement.Web.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error Creating Leave Request");
                 ModelState.AddModelError(string.Empty, "An error has occured. Please try again later.");
             }
 
